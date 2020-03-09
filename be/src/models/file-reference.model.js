@@ -1,18 +1,16 @@
-// BlogEntry-model.js - A mongoose model
+// FileReference-model.js - A mongoose model
 //
 // See http://mongoosejs.com/docs/models.html
 // for more of what you can do here.
 module.exports = function (app) {
-  const modelName = 'blogEntry';
+  const modelName = 'fileReference';
   const mongooseClient = app.get('mongooseClient');
   const { Schema } = mongooseClient;
   const schema = new Schema({
-    title: { type: String },
-    text: { type: String },
-    images: [{ type: String }],
-    attachment: { type: String }
+    _id: { type: String },
+    references: [{ type: String, index: true }]
   }, {
-    timestamps: true,
+    timestamps: true, // needed for cleaning
     versionKey: false
   });
 
