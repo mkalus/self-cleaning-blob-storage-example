@@ -1,8 +1,10 @@
-
+const { disallow } = require('feathers-hooks-common');
 
 module.exports = {
   before: {
-    all: [],
+    all: [
+      disallow('external') // only internal access granted
+    ],
     find: [],
     get: [],
     create: [],

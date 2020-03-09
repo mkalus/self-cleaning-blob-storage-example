@@ -5,8 +5,7 @@ const hooks = require('./file-reference.hooks');
 
 module.exports = function (app) {
   const options = {
-    Model: createModel(app),
-    paginate: app.get('paginate')
+    Model: createModel(app)
   };
 
   // Initialize our service with any options it requires

@@ -1,4 +1,5 @@
-
+const connectReference = require('../../hooks/connect-references');
+const disconnectReference = require('../../hooks/disconnect-references');
 
 module.exports = {
   before: {
@@ -15,10 +16,10 @@ module.exports = {
     all: [],
     find: [],
     get: [],
-    create: [],
-    update: [],
-    patch: [],
-    remove: []
+    create: [ connectReference('images', 'attachment') ],
+    update: [ connectReference('images', 'attachment') ],
+    patch: [ connectReference('images', 'attachment') ],
+    remove: [ disconnectReference() ]
   },
 
   error: {
