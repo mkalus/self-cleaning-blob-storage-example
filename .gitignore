@@ -1,0 +1,8 @@
+# IDEs and editors (shamelessly copied from @angular/cli's .gitignore)
+/.idea
+.project
+.classpath
+.c9/
+*.launch
+.settings/
+*.sublime-workspace
