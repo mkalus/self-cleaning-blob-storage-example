@@ -18,7 +18,7 @@ module.exports = () => {
         for (let i = 0; i < refs.length; i++) {
           const ref = refs[i];
 
-          const pos = ref.references.indexOf(ref);
+          const pos = ref.references.indexOf(context.result._id);
           if (pos < 0) continue;
 
           // remove _id from list

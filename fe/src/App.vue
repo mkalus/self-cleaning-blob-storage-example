@@ -17,7 +17,7 @@
                 {{ props.row.images.length }}
               </b-table-column>
               <b-table-column field="blogEntry.text" label="Attachment">
-                {{ props.row.images.attachment ? 'yes' : 'no' }}
+                {{ props.row.attachment ? 'yes' : 'no' }}
               </b-table-column>
               <b-table-column>
                 <div class="field has-addons">
@@ -72,9 +72,13 @@
     deleteBlogEntry (blogEntry) {
       this.$buefy.dialog.confirm({
         message: 'Really delete ' + blogEntry.title,
-        onConfirm: () => {
-          blogEntry.remove();
-          this.$buefy.toast.open('Entry deleted.');
+        onConfirm: async () => {
+          try {
+            await blogEntry.remove();
+            this.$buefy.toast.open('Entry deleted.');
+          } catch (e) {
+            this.$buefy.toast.open({ message: 'Deletion failed: ' + e, type: 'is-danger', duration: 5000 });
+          }
         }
       });
     }

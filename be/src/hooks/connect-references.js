@@ -50,7 +50,7 @@ module.exports = (...fields) => {
       for (let i = 0; i < unconnectedReferences.length; i++) {
         const ref = unconnectedReferences[i];
 
-        const pos = ref.references.indexOf(model._id);
+        const pos = ref.references.indexOf(context.result._id);
         if (pos === -1) continue;
 
         // remove _id from list
