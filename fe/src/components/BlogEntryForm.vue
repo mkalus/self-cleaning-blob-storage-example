@@ -11,6 +11,31 @@
                 <b-input maxlength="200" type="textarea" v-model="value.text"></b-input>
             </b-field>
 
+            <p><strong>Images</strong></p>
+
+            <div style="margin-bottom: 1em" v-if="value.images">
+                <div class="card" v-for="image of value.images" :key="image" style="width: 200px; display: inline-block">
+                    <div class="card-image">
+                        <figure class="image" style="width: 200px; height: auto">
+                            <img :src="'http://localhost:3030/blobs/' + image" alt="Placeholder image">
+                        </figure>
+                    </div>
+                </div>
+            </div>
+
+            <b-field>
+                <b-upload drag-drop accept="image/*" @input="imageAdded" :loading="uploadingImage">
+                    <section class="section">
+                        <div class="content has-text-centered">
+                            <p>
+                                <b-icon icon="plus" size="is-large"/>
+                            </p>
+                            <p>Add image</p>
+                        </div>
+                    </section>
+                </b-upload>
+            </b-field>
+
             <b-field v-if="!value.attachment" label="Attachment file">
                 <b-upload drag-drop @input="attachmentAdded" :loading="uploadingAttachment">
                     <section class="section">
@@ -67,6 +92,29 @@ export default {
             } catch (e) {
                 this.$buefy.toast.open({ message: 'Error on save:' + e, type: 'is-danger', duration: 5000 });
             }
+        },
+        /**
+         * event - image added
+         */
+        imageAdded (file) {
+            const reader = new FileReader();
+            reader.readAsDataURL(file);
+
+            const me = this;
+            me.uploadingImage = true;
+
+            // upload finished...
+            reader.onload = () => {
+                // upload file to service
+                this.$store.dispatch('uploads/create', { uri: reader.result }).then((response) => {
+                    this.value.images.push(response.id);
+                }).catch((err) => {
+                    console.log(err);
+                    this.$buefy.toast.open({ message: 'Upload failed - see console.log!', type: 'is-danger', duration: 5000 });
+                });
+
+                me.uploadingImage = false;
+            };
         },
         /**
          * event - attachment added
