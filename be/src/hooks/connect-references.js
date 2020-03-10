@@ -71,6 +71,28 @@ module.exports = (...fields) => {
       }
     }
 
+    // finally, delete stale all orphan references
+    const staleOrphans = await FileReference.find({
+      updatedAt: {
+        $lte: new Date().getTime()-60*5*1000 // find entries older than 5 minutes (60 * 5 * 1000 ms)
+      },
+      $or: [
+        { references: { $size: 0 } },
+        { references: { $exists: false } }
+      ]
+    });
+    if (staleOrphans) {
+      for (let i = 0; i < staleOrphans.length; i++) {
+        const ref = staleOrphans[i];
+
+        // orphaned file -> delete it!
+        await context.app.service('uploads').remove(ref._id);
+
+        // delete via service
+        await FileReference.deleteOne({_id: ref._id});
+      }
+    }
+
     return context;
   };
 };
