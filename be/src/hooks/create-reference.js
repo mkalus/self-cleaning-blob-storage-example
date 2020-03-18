@@ -10,6 +10,7 @@ module.exports = () => {
       const FileReference = context.app.service('file-reference').Model;
 
       try {
+        console.log('Creating blob ' + context.result.id);
         await FileReference.updateOne(
           { _id: context.result.id },
           { _id: context.result.id },
