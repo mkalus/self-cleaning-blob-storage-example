@@ -37,6 +37,7 @@ module.exports = (...fields) => {
 
     // now we have gathered all the ids - connect them
     for (let i = 0; i < connectedIds.length; i++) {
+      console.log('Connecting ' + context.result._id + ' to blob ' + connectedIds[i]);
       await FileReference.updateOne(
         { _id: connectedIds[i] }, // find or create file id
         { $addToSet: { references: context.result._id } }, // add reference id
@@ -48,26 +49,12 @@ module.exports = (...fields) => {
     const unconnectedReferences = await FileReference.find({ references: context.result._id, _id: { $nin: connectedIds } });
     if (unconnectedReferences) {
       for (let i = 0; i < unconnectedReferences.length; i++) {
-        const ref = unconnectedReferences[i];
-
-        const pos = ref.references.indexOf(context.result._id);
-        if (pos === -1) continue;
-
-        // remove _id from list
-        ref.references.splice(pos, 1);
-        if (ref.references.length === 0) {
-          // orphaned file -> delete it!
-          await context.app.service('uploads').remove(ref._id);
-
-          // delete via service
-          await FileReference.deleteOne({_id: ref._id});
-        } else {
-          // update data set
-          await FileReference.updateOne(
-            {_id: ref._id},
-            {$set: {references: ref.references}}
-          );
-        }
+        console.log('Disconnecting ' + context.result._id + ' from blob ' + connectedIds[i]);
+        // update data set - pull id from list
+        await FileReference.updateOne(
+          {_id: unconnectedReferences[i]._id},
+          { $pull: { references: context.result._id } }
+        );
       }
     }
 
@@ -84,6 +71,8 @@ module.exports = (...fields) => {
     if (staleOrphans) {
       for (let i = 0; i < staleOrphans.length; i++) {
         const ref = staleOrphans[i];
+
+        console.log('Deleting stale orphan blob ' + ref._id);
 
         // orphaned file -> delete it!
         await context.app.service('uploads').remove(ref._id);
