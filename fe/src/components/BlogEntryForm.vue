@@ -14,12 +14,15 @@
             <p><strong>Images</strong></p>
 
             <div style="margin-bottom: 1em" v-if="value.images">
-                <div class="card" v-for="image of value.images" :key="image" style="width: 200px; display: inline-block">
+                <div class="card" v-for="(image, idx) of value.images" :key="image" style="width: 200px; display: inline-block">
                     <div class="card-image">
                         <figure class="image" style="width: 200px; height: auto">
                             <img :src="'http://localhost:3030/blobs/' + image" alt="Placeholder image">
                         </figure>
                     </div>
+                    <footer class="card-footer">
+                        <a href="#" class="card-footer-item" @click.prevent="deleteImage(idx)">Delete</a>
+                    </footer>
                 </div>
             </div>
 
@@ -138,6 +141,13 @@ export default {
 
                 me.uploadingAttachment = false;
             };
+        },
+        /**
+         * delete image by index
+         */
+        deleteImage (idx) {
+            this.value.images.splice(idx, 1);
+            // this.$emit('change', this.value);
         }
     }
 };
