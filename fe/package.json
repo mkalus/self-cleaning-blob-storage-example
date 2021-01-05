@@ -11,7 +11,7 @@
     "@feathersjs/feathers": "^4.5.11",
     "@feathersjs/rest-client": "^4.5.11",
     "@vue/composition-api": "^0.6.7",
-    "axios": "^0.21.0",
+    "axios": "^0.21.1",
     "buefy": "^0.9.4",
     "core-js": "^3.8.1",
     "feathers-vuex": "^3.15.0",
